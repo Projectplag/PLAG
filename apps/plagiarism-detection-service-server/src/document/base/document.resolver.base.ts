@@ -17,7 +17,11 @@ import { Document } from "./Document";
 import { DocumentCountArgs } from "./DocumentCountArgs";
 import { DocumentFindManyArgs } from "./DocumentFindManyArgs";
 import { DocumentFindUniqueArgs } from "./DocumentFindUniqueArgs";
+import { CreateDocumentArgs } from "./CreateDocumentArgs";
+import { UpdateDocumentArgs } from "./UpdateDocumentArgs";
 import { DeleteDocumentArgs } from "./DeleteDocumentArgs";
+import { CheckFindManyArgs } from "../../check/base/CheckFindManyArgs";
+import { Check } from "../../check/base/Check";
 import { DocumentService } from "../document.service";
 @graphql.Resolver(() => Document)
 export class DocumentResolverBase {
@@ -51,6 +55,35 @@ export class DocumentResolverBase {
   }
 
   @graphql.Mutation(() => Document)
+  async createDocument(
+    @graphql.Args() args: CreateDocumentArgs
+  ): Promise<Document> {
+    return await this.service.createDocument({
+      ...args,
+      data: args.data,
+    });
+  }
+
+  @graphql.Mutation(() => Document)
+  async updateDocument(
+    @graphql.Args() args: UpdateDocumentArgs
+  ): Promise<Document | null> {
+    try {
+      return await this.service.updateDocument({
+        ...args,
+        data: args.data,
+      });
+    } catch (error) {
+      if (isRecordNotFoundError(error)) {
+        throw new GraphQLError(
+          `No resource was found for ${JSON.stringify(args.where)}`
+        );
+      }
+      throw error;
+    }
+  }
+
+  @graphql.Mutation(() => Document)
   async deleteDocument(
     @graphql.Args() args: DeleteDocumentArgs
   ): Promise<Document | null> {
@@ -64,5 +97,19 @@ export class DocumentResolverBase {
       }
       throw error;
     }
+  }
+
+  @graphql.ResolveField(() => [Check], { name: "checks" })
+  async findChecks(
+    @graphql.Parent() parent: Document,
+    @graphql.Args() args: CheckFindManyArgs
+  ): Promise<Check[]> {
+    const results = await this.service.findChecks(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
   }
 }

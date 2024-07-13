@@ -22,6 +22,9 @@ import { Document } from "./Document";
 import { DocumentFindManyArgs } from "./DocumentFindManyArgs";
 import { DocumentWhereUniqueInput } from "./DocumentWhereUniqueInput";
 import { DocumentUpdateInput } from "./DocumentUpdateInput";
+import { CheckFindManyArgs } from "../../check/base/CheckFindManyArgs";
+import { Check } from "../../check/base/Check";
+import { CheckWhereUniqueInput } from "../../check/base/CheckWhereUniqueInput";
 
 export class DocumentControllerBase {
   constructor(protected readonly service: DocumentService) {}
@@ -36,6 +39,10 @@ export class DocumentControllerBase {
         id: true,
         createdAt: true,
         updatedAt: true,
+        title: true,
+        submissionDate: true,
+        content: true,
+        author: true,
       },
     });
   }
@@ -51,6 +58,10 @@ export class DocumentControllerBase {
         id: true,
         createdAt: true,
         updatedAt: true,
+        title: true,
+        submissionDate: true,
+        content: true,
+        author: true,
       },
     });
   }
@@ -67,6 +78,10 @@ export class DocumentControllerBase {
         id: true,
         createdAt: true,
         updatedAt: true,
+        title: true,
+        submissionDate: true,
+        content: true,
+        author: true,
       },
     });
     if (result === null) {
@@ -92,6 +107,10 @@ export class DocumentControllerBase {
           id: true,
           createdAt: true,
           updatedAt: true,
+          title: true,
+          submissionDate: true,
+          content: true,
+          author: true,
         },
       });
     } catch (error) {
@@ -117,6 +136,10 @@ export class DocumentControllerBase {
           id: true,
           createdAt: true,
           updatedAt: true,
+          title: true,
+          submissionDate: true,
+          content: true,
+          author: true,
         },
       });
     } catch (error) {
@@ -127,5 +150,90 @@ export class DocumentControllerBase {
       }
       throw error;
     }
+  }
+
+  @common.Get("/:id/checks")
+  @ApiNestedQuery(CheckFindManyArgs)
+  async findChecks(
+    @common.Req() request: Request,
+    @common.Param() params: DocumentWhereUniqueInput
+  ): Promise<Check[]> {
+    const query = plainToClass(CheckFindManyArgs, request.query);
+    const results = await this.service.findChecks(params.id, {
+      ...query,
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+
+        document: {
+          select: {
+            id: true,
+          },
+        },
+
+        checkedBy: true,
+        checkDate: true,
+        similarityScore: true,
+        report: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/checks")
+  async connectChecks(
+    @common.Param() params: DocumentWhereUniqueInput,
+    @common.Body() body: CheckWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      checks: {
+        connect: body,
+      },
+    };
+    await this.service.updateDocument({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/checks")
+  async updateChecks(
+    @common.Param() params: DocumentWhereUniqueInput,
+    @common.Body() body: CheckWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      checks: {
+        set: body,
+      },
+    };
+    await this.service.updateDocument({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/checks")
+  async disconnectChecks(
+    @common.Param() params: DocumentWhereUniqueInput,
+    @common.Body() body: CheckWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      checks: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateDocument({
+      where: params,
+      data,
+      select: { id: true },
+    });
   }
 }

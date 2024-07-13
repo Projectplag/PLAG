@@ -17,7 +17,12 @@ import { Check } from "./Check";
 import { CheckCountArgs } from "./CheckCountArgs";
 import { CheckFindManyArgs } from "./CheckFindManyArgs";
 import { CheckFindUniqueArgs } from "./CheckFindUniqueArgs";
+import { CreateCheckArgs } from "./CreateCheckArgs";
+import { UpdateCheckArgs } from "./UpdateCheckArgs";
 import { DeleteCheckArgs } from "./DeleteCheckArgs";
+import { SimilarityReportFindManyArgs } from "../../similarityReport/base/SimilarityReportFindManyArgs";
+import { SimilarityReport } from "../../similarityReport/base/SimilarityReport";
+import { Document } from "../../document/base/Document";
 import { CheckService } from "../check.service";
 @graphql.Resolver(() => Check)
 export class CheckResolverBase {
@@ -49,6 +54,49 @@ export class CheckResolverBase {
   }
 
   @graphql.Mutation(() => Check)
+  async createCheck(@graphql.Args() args: CreateCheckArgs): Promise<Check> {
+    return await this.service.createCheck({
+      ...args,
+      data: {
+        ...args.data,
+
+        document: args.data.document
+          ? {
+              connect: args.data.document,
+            }
+          : undefined,
+      },
+    });
+  }
+
+  @graphql.Mutation(() => Check)
+  async updateCheck(
+    @graphql.Args() args: UpdateCheckArgs
+  ): Promise<Check | null> {
+    try {
+      return await this.service.updateCheck({
+        ...args,
+        data: {
+          ...args.data,
+
+          document: args.data.document
+            ? {
+                connect: args.data.document,
+              }
+            : undefined,
+        },
+      });
+    } catch (error) {
+      if (isRecordNotFoundError(error)) {
+        throw new GraphQLError(
+          `No resource was found for ${JSON.stringify(args.where)}`
+        );
+      }
+      throw error;
+    }
+  }
+
+  @graphql.Mutation(() => Check)
   async deleteCheck(
     @graphql.Args() args: DeleteCheckArgs
   ): Promise<Check | null> {
@@ -62,5 +110,32 @@ export class CheckResolverBase {
       }
       throw error;
     }
+  }
+
+  @graphql.ResolveField(() => [SimilarityReport], { name: "similarityReports" })
+  async findSimilarityReports(
+    @graphql.Parent() parent: Check,
+    @graphql.Args() args: SimilarityReportFindManyArgs
+  ): Promise<SimilarityReport[]> {
+    const results = await this.service.findSimilarityReports(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
+  @graphql.ResolveField(() => Document, {
+    nullable: true,
+    name: "document",
+  })
+  async getDocument(@graphql.Parent() parent: Check): Promise<Document | null> {
+    const result = await this.service.getDocument(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return result;
   }
 }

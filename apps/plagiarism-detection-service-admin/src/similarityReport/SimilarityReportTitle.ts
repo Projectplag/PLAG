@@ -1,7 +1,7 @@
 import { SimilarityReport as TSimilarityReport } from "../api/similarityReport/SimilarityReport";
 
-export const SIMILARITYREPORT_TITLE_FIELD = "id";
+export const SIMILARITYREPORT_TITLE_FIELD = "matchedDocument";
 
 export const SimilarityReportTitle = (record: TSimilarityReport): string => {
-  return record.id?.toString() || String(record.id);
+  return record.matchedDocument?.toString() || String(record.id);
 };

@@ -7,32 +7,55 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Check {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model SimilarityReport {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  matchPercentage Float?
+  matchSnippet    String?
+  check           Check?   @relation(fields: [checkId], references: [id])
+  checkId         String?
+  matchedDocument String?
 }
 
-model SimilarityReport {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Check {
+  id                String             @id @default(cuid())
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  document          Document?          @relation(fields: [documentId], references: [id])
+  documentId        String?
+  checkedBy         String?
+  checkDate         DateTime?
+  similarityScore   Float?
+  report            Json?
+  similarityReports SimilarityReport[]
 }
 
 model Document {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String    @id @default(cuid())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  title          String?
+  submissionDate DateTime?
+  checks         Check[]
+  content        String?
+  author         String?
 }
 
 model User {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String        @id @default(cuid())
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
   firstName String?
   lastName  String?
-  username  String   @unique
-  email     String?  @unique
+  username  String        @unique
+  email     String?       @unique
   password  String
   roles     Json
+  role      EnumUserRole?
+  name      String?
+}
+
+enum EnumUserRole {
+  Option1
 }

@@ -9,5 +9,78 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-class DocumentUpdateInput {}
+import { InputType, Field } from "@nestjs/graphql";
+import { ApiProperty } from "@nestjs/swagger";
+import {
+  IsString,
+  MaxLength,
+  IsOptional,
+  IsDate,
+  ValidateNested,
+} from "class-validator";
+import { Type } from "class-transformer";
+import { CheckUpdateManyWithoutDocumentsInput } from "./CheckUpdateManyWithoutDocumentsInput";
+
+@InputType()
+class DocumentUpdateInput {
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  title?: string | null;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsDate()
+  @Type(() => Date)
+  @IsOptional()
+  @Field(() => Date, {
+    nullable: true,
+  })
+  submissionDate?: Date | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => CheckUpdateManyWithoutDocumentsInput,
+  })
+  @ValidateNested()
+  @Type(() => CheckUpdateManyWithoutDocumentsInput)
+  @IsOptional()
+  @Field(() => CheckUpdateManyWithoutDocumentsInput, {
+    nullable: true,
+  })
+  checks?: CheckUpdateManyWithoutDocumentsInput;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  content?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  author?: string | null;
+}
+
 export { DocumentUpdateInput as DocumentUpdateInput };

@@ -21,23 +21,35 @@ const CREATE_INPUT = {
   id: "exampleId",
   createdAt: new Date(),
   updatedAt: new Date(),
+  checkedBy: "exampleCheckedBy",
+  checkDate: new Date(),
+  similarityScore: 42.42,
 };
 const CREATE_RESULT = {
   id: "exampleId",
   createdAt: new Date(),
   updatedAt: new Date(),
+  checkedBy: "exampleCheckedBy",
+  checkDate: new Date(),
+  similarityScore: 42.42,
 };
 const FIND_MANY_RESULT = [
   {
     id: "exampleId",
     createdAt: new Date(),
     updatedAt: new Date(),
+    checkedBy: "exampleCheckedBy",
+    checkDate: new Date(),
+    similarityScore: 42.42,
   },
 ];
 const FIND_ONE_RESULT = {
   id: "exampleId",
   createdAt: new Date(),
   updatedAt: new Date(),
+  checkedBy: "exampleCheckedBy",
+  checkDate: new Date(),
+  similarityScore: 42.42,
 };
 
 const service = {
@@ -124,6 +136,7 @@ describe("Check", () => {
         ...CREATE_RESULT,
         createdAt: CREATE_RESULT.createdAt.toISOString(),
         updatedAt: CREATE_RESULT.updatedAt.toISOString(),
+        checkDate: CREATE_RESULT.checkDate.toISOString(),
       });
   });
 
@@ -136,6 +149,7 @@ describe("Check", () => {
           ...FIND_MANY_RESULT[0],
           createdAt: FIND_MANY_RESULT[0].createdAt.toISOString(),
           updatedAt: FIND_MANY_RESULT[0].updatedAt.toISOString(),
+          checkDate: FIND_MANY_RESULT[0].checkDate.toISOString(),
         },
       ]);
   });
@@ -159,6 +173,7 @@ describe("Check", () => {
         ...FIND_ONE_RESULT,
         createdAt: FIND_ONE_RESULT.createdAt.toISOString(),
         updatedAt: FIND_ONE_RESULT.updatedAt.toISOString(),
+        checkDate: FIND_ONE_RESULT.checkDate.toISOString(),
       });
   });
 
@@ -172,6 +187,7 @@ describe("Check", () => {
         ...CREATE_RESULT,
         createdAt: CREATE_RESULT.createdAt.toISOString(),
         updatedAt: CREATE_RESULT.updatedAt.toISOString(),
+        checkDate: CREATE_RESULT.checkDate.toISOString(),
       })
       .then(function () {
         agent

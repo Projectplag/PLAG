@@ -7,6 +7,7 @@ import {
   TextInput,
   PasswordInput,
   SelectArrayInput,
+  SelectInput,
 } from "react-admin";
 
 import { ROLES_OPTIONS } from "../user/RolesOptions";
@@ -26,6 +27,15 @@ export const UserCreate = (props: CreateProps): React.ReactElement => {
           optionText="label"
           optionValue="value"
         />
+        <SelectInput
+          source="role"
+          label="role"
+          choices={[{ label: "Option 1", value: "Option1" }]}
+          optionText="label"
+          allowEmpty
+          optionValue="value"
+        />
+        <TextInput label="name" source="name" />
       </SimpleForm>
     </Create>
   );

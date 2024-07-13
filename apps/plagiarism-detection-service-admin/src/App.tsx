@@ -5,14 +5,14 @@ import { theme } from "./theme/theme";
 import Login from "./Login";
 import "./App.scss";
 import Dashboard from "./pages/Dashboard";
-import { CheckList } from "./check/CheckList";
-import { CheckCreate } from "./check/CheckCreate";
-import { CheckEdit } from "./check/CheckEdit";
-import { CheckShow } from "./check/CheckShow";
 import { SimilarityReportList } from "./similarityReport/SimilarityReportList";
 import { SimilarityReportCreate } from "./similarityReport/SimilarityReportCreate";
 import { SimilarityReportEdit } from "./similarityReport/SimilarityReportEdit";
 import { SimilarityReportShow } from "./similarityReport/SimilarityReportShow";
+import { CheckList } from "./check/CheckList";
+import { CheckCreate } from "./check/CheckCreate";
+import { CheckEdit } from "./check/CheckEdit";
+import { CheckShow } from "./check/CheckShow";
 import { DocumentList } from "./document/DocumentList";
 import { DocumentCreate } from "./document/DocumentCreate";
 import { DocumentEdit } from "./document/DocumentEdit";
@@ -48,18 +48,18 @@ const App = (): React.ReactElement => {
         loginPage={Login}
       >
         <Resource
-          name="Check"
-          list={CheckList}
-          edit={CheckEdit}
-          create={CheckCreate}
-          show={CheckShow}
-        />
-        <Resource
           name="SimilarityReport"
           list={SimilarityReportList}
           edit={SimilarityReportEdit}
           create={SimilarityReportCreate}
           show={SimilarityReportShow}
+        />
+        <Resource
+          name="Check"
+          list={CheckList}
+          edit={CheckEdit}
+          create={CheckCreate}
+          show={CheckShow}
         />
         <Resource
           name="Document"

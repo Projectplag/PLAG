@@ -9,5 +9,78 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-class DocumentCreateInput {}
+import { InputType, Field } from "@nestjs/graphql";
+import { ApiProperty } from "@nestjs/swagger";
+import {
+  IsString,
+  MaxLength,
+  IsOptional,
+  IsDate,
+  ValidateNested,
+} from "class-validator";
+import { Type } from "class-transformer";
+import { CheckCreateNestedManyWithoutDocumentsInput } from "./CheckCreateNestedManyWithoutDocumentsInput";
+
+@InputType()
+class DocumentCreateInput {
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  title?: string | null;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsDate()
+  @Type(() => Date)
+  @IsOptional()
+  @Field(() => Date, {
+    nullable: true,
+  })
+  submissionDate?: Date | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => CheckCreateNestedManyWithoutDocumentsInput,
+  })
+  @ValidateNested()
+  @Type(() => CheckCreateNestedManyWithoutDocumentsInput)
+  @IsOptional()
+  @Field(() => CheckCreateNestedManyWithoutDocumentsInput, {
+    nullable: true,
+  })
+  checks?: CheckCreateNestedManyWithoutDocumentsInput;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  content?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  author?: string | null;
+}
+
 export { DocumentCreateInput as DocumentCreateInput };

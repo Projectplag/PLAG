@@ -11,8 +11,20 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsDate } from "class-validator";
+
+import {
+  IsString,
+  IsDate,
+  IsNumber,
+  Min,
+  Max,
+  IsOptional,
+  MaxLength,
+  ValidateNested,
+} from "class-validator";
+
 import { Type } from "class-transformer";
+import { Check } from "../../check/base/Check";
 
 @ObjectType()
 class SimilarityReport {
@@ -39,6 +51,52 @@ class SimilarityReport {
   @Type(() => Date)
   @Field(() => Date)
   updatedAt!: Date;
+
+  @ApiProperty({
+    required: false,
+    type: Number,
+  })
+  @IsNumber()
+  @Min(-999999999)
+  @Max(999999999)
+  @IsOptional()
+  @Field(() => Number, {
+    nullable: true,
+  })
+  matchPercentage!: number | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  matchSnippet!: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => Check,
+  })
+  @ValidateNested()
+  @Type(() => Check)
+  @IsOptional()
+  check?: Check | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  matchedDocument!: string | null;
 }
 
 export { SimilarityReport as SimilarityReport };

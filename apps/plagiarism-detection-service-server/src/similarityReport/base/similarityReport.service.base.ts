@@ -13,6 +13,7 @@ import { PrismaService } from "../../prisma/prisma.service";
 import {
   Prisma,
   SimilarityReport as PrismaSimilarityReport,
+  Check as PrismaCheck,
 } from "@prisma/client";
 
 export class SimilarityReportServiceBase {
@@ -48,5 +49,13 @@ export class SimilarityReportServiceBase {
     args: Prisma.SimilarityReportDeleteArgs
   ): Promise<PrismaSimilarityReport> {
     return this.prisma.similarityReport.delete(args);
+  }
+
+  async getCheck(parentId: string): Promise<PrismaCheck | null> {
+    return this.prisma.similarityReport
+      .findUnique({
+        where: { id: parentId },
+      })
+      .check();
   }
 }

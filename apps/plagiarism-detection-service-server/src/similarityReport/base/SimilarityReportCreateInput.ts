@@ -9,5 +9,70 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-class SimilarityReportCreateInput {}
+import { InputType, Field } from "@nestjs/graphql";
+import { ApiProperty } from "@nestjs/swagger";
+import {
+  IsNumber,
+  Min,
+  Max,
+  IsOptional,
+  IsString,
+  MaxLength,
+  ValidateNested,
+} from "class-validator";
+import { CheckWhereUniqueInput } from "../../check/base/CheckWhereUniqueInput";
+import { Type } from "class-transformer";
+
+@InputType()
+class SimilarityReportCreateInput {
+  @ApiProperty({
+    required: false,
+    type: Number,
+  })
+  @IsNumber()
+  @Min(-999999999)
+  @Max(999999999)
+  @IsOptional()
+  @Field(() => Number, {
+    nullable: true,
+  })
+  matchPercentage?: number | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  matchSnippet?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => CheckWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => CheckWhereUniqueInput)
+  @IsOptional()
+  @Field(() => CheckWhereUniqueInput, {
+    nullable: true,
+  })
+  check?: CheckWhereUniqueInput | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  matchedDocument?: string | null;
+}
+
 export { SimilarityReportCreateInput as SimilarityReportCreateInput };

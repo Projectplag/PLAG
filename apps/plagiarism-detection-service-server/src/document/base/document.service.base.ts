@@ -10,7 +10,11 @@ https://docs.amplication.com/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { PrismaService } from "../../prisma/prisma.service";
-import { Prisma, Document as PrismaDocument } from "@prisma/client";
+import {
+  Prisma,
+  Document as PrismaDocument,
+  Check as PrismaCheck,
+} from "@prisma/client";
 
 export class DocumentServiceBase {
   constructor(protected readonly prisma: PrismaService) {}
@@ -43,5 +47,16 @@ export class DocumentServiceBase {
     args: Prisma.DocumentDeleteArgs
   ): Promise<PrismaDocument> {
     return this.prisma.document.delete(args);
+  }
+
+  async findChecks(
+    parentId: string,
+    args: Prisma.CheckFindManyArgs
+  ): Promise<PrismaCheck[]> {
+    return this.prisma.document
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .checks(args);
   }
 }

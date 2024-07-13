@@ -31,11 +31,29 @@ export class SimilarityReportControllerBase {
     @common.Body() data: SimilarityReportCreateInput
   ): Promise<SimilarityReport> {
     return await this.service.createSimilarityReport({
-      data: data,
+      data: {
+        ...data,
+
+        check: data.check
+          ? {
+              connect: data.check,
+            }
+          : undefined,
+      },
       select: {
         id: true,
         createdAt: true,
         updatedAt: true,
+        matchPercentage: true,
+        matchSnippet: true,
+
+        check: {
+          select: {
+            id: true,
+          },
+        },
+
+        matchedDocument: true,
       },
     });
   }
@@ -53,6 +71,16 @@ export class SimilarityReportControllerBase {
         id: true,
         createdAt: true,
         updatedAt: true,
+        matchPercentage: true,
+        matchSnippet: true,
+
+        check: {
+          select: {
+            id: true,
+          },
+        },
+
+        matchedDocument: true,
       },
     });
   }
@@ -69,6 +97,16 @@ export class SimilarityReportControllerBase {
         id: true,
         createdAt: true,
         updatedAt: true,
+        matchPercentage: true,
+        matchSnippet: true,
+
+        check: {
+          select: {
+            id: true,
+          },
+        },
+
+        matchedDocument: true,
       },
     });
     if (result === null) {
@@ -89,11 +127,29 @@ export class SimilarityReportControllerBase {
     try {
       return await this.service.updateSimilarityReport({
         where: params,
-        data: data,
+        data: {
+          ...data,
+
+          check: data.check
+            ? {
+                connect: data.check,
+              }
+            : undefined,
+        },
         select: {
           id: true,
           createdAt: true,
           updatedAt: true,
+          matchPercentage: true,
+          matchSnippet: true,
+
+          check: {
+            select: {
+              id: true,
+            },
+          },
+
+          matchedDocument: true,
         },
       });
     } catch (error) {
@@ -119,6 +175,16 @@ export class SimilarityReportControllerBase {
           id: true,
           createdAt: true,
           updatedAt: true,
+          matchPercentage: true,
+          matchSnippet: true,
+
+          check: {
+            select: {
+              id: true,
+            },
+          },
+
+          matchedDocument: true,
         },
       });
     } catch (error) {

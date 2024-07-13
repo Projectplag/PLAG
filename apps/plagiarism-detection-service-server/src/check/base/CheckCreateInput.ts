@@ -9,5 +9,98 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-class CheckCreateInput {}
+import { InputType, Field } from "@nestjs/graphql";
+import { ApiProperty } from "@nestjs/swagger";
+import { DocumentWhereUniqueInput } from "../../document/base/DocumentWhereUniqueInput";
+
+import {
+  ValidateNested,
+  IsOptional,
+  IsString,
+  MaxLength,
+  IsDate,
+  IsNumber,
+  Min,
+  Max,
+} from "class-validator";
+
+import { Type } from "class-transformer";
+import { IsJSONValue } from "../../validators";
+import { GraphQLJSON } from "graphql-type-json";
+import { InputJsonValue } from "../../types";
+import { SimilarityReportCreateNestedManyWithoutChecksInput } from "./SimilarityReportCreateNestedManyWithoutChecksInput";
+
+@InputType()
+class CheckCreateInput {
+  @ApiProperty({
+    required: false,
+    type: () => DocumentWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => DocumentWhereUniqueInput)
+  @IsOptional()
+  @Field(() => DocumentWhereUniqueInput, {
+    nullable: true,
+  })
+  document?: DocumentWhereUniqueInput | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  checkedBy?: string | null;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsDate()
+  @Type(() => Date)
+  @IsOptional()
+  @Field(() => Date, {
+    nullable: true,
+  })
+  checkDate?: Date | null;
+
+  @ApiProperty({
+    required: false,
+    type: Number,
+  })
+  @IsNumber()
+  @Min(-999999999)
+  @Max(999999999)
+  @IsOptional()
+  @Field(() => Number, {
+    nullable: true,
+  })
+  similarityScore?: number | null;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsJSONValue()
+  @IsOptional()
+  @Field(() => GraphQLJSON, {
+    nullable: true,
+  })
+  report?: InputJsonValue;
+
+  @ApiProperty({
+    required: false,
+    type: () => SimilarityReportCreateNestedManyWithoutChecksInput,
+  })
+  @ValidateNested()
+  @Type(() => SimilarityReportCreateNestedManyWithoutChecksInput)
+  @IsOptional()
+  @Field(() => SimilarityReportCreateNestedManyWithoutChecksInput, {
+    nullable: true,
+  })
+  similarityReports?: SimilarityReportCreateNestedManyWithoutChecksInput;
+}
+
 export { CheckCreateInput as CheckCreateInput };

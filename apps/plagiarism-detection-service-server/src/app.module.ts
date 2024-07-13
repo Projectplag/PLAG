@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { CheckModule } from "./check/check.module";
 import { SimilarityReportModule } from "./similarityReport/similarityReport.module";
+import { CheckModule } from "./check/check.module";
 import { DocumentModule } from "./document/document.module";
 import { UserModule } from "./user/user.module";
 import { HealthModule } from "./health/health.module";
@@ -15,8 +15,8 @@ import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 @Module({
   controllers: [],
   imports: [
-    CheckModule,
     SimilarityReportModule,
+    CheckModule,
     DocumentModule,
     UserModule,
     HealthModule,

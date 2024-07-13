@@ -9,4 +9,6 @@ export type User = {
   username: string;
   email: string | null;
   roles: JsonValue;
+  role?: "Option1" | null;
+  name: string | null;
 };

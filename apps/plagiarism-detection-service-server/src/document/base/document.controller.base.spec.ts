@@ -21,23 +21,39 @@ const CREATE_INPUT = {
   id: "exampleId",
   createdAt: new Date(),
   updatedAt: new Date(),
+  title: "exampleTitle",
+  submissionDate: new Date(),
+  content: "exampleContent",
+  author: "exampleAuthor",
 };
 const CREATE_RESULT = {
   id: "exampleId",
   createdAt: new Date(),
   updatedAt: new Date(),
+  title: "exampleTitle",
+  submissionDate: new Date(),
+  content: "exampleContent",
+  author: "exampleAuthor",
 };
 const FIND_MANY_RESULT = [
   {
     id: "exampleId",
     createdAt: new Date(),
     updatedAt: new Date(),
+    title: "exampleTitle",
+    submissionDate: new Date(),
+    content: "exampleContent",
+    author: "exampleAuthor",
   },
 ];
 const FIND_ONE_RESULT = {
   id: "exampleId",
   createdAt: new Date(),
   updatedAt: new Date(),
+  title: "exampleTitle",
+  submissionDate: new Date(),
+  content: "exampleContent",
+  author: "exampleAuthor",
 };
 
 const service = {
@@ -124,6 +140,7 @@ describe("Document", () => {
         ...CREATE_RESULT,
         createdAt: CREATE_RESULT.createdAt.toISOString(),
         updatedAt: CREATE_RESULT.updatedAt.toISOString(),
+        submissionDate: CREATE_RESULT.submissionDate.toISOString(),
       });
   });
 
@@ -136,6 +153,7 @@ describe("Document", () => {
           ...FIND_MANY_RESULT[0],
           createdAt: FIND_MANY_RESULT[0].createdAt.toISOString(),
           updatedAt: FIND_MANY_RESULT[0].updatedAt.toISOString(),
+          submissionDate: FIND_MANY_RESULT[0].submissionDate.toISOString(),
         },
       ]);
   });
@@ -159,6 +177,7 @@ describe("Document", () => {
         ...FIND_ONE_RESULT,
         createdAt: FIND_ONE_RESULT.createdAt.toISOString(),
         updatedAt: FIND_ONE_RESULT.updatedAt.toISOString(),
+        submissionDate: FIND_ONE_RESULT.submissionDate.toISOString(),
       });
   });
 
@@ -172,6 +191,7 @@ describe("Document", () => {
         ...CREATE_RESULT,
         createdAt: CREATE_RESULT.createdAt.toISOString(),
         updatedAt: CREATE_RESULT.updatedAt.toISOString(),
+        submissionDate: CREATE_RESULT.submissionDate.toISOString(),
       })
       .then(function () {
         agent

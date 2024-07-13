@@ -13,7 +13,10 @@ import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { StringFilter } from "../../util/StringFilter";
 import { Type } from "class-transformer";
-import { IsOptional } from "class-validator";
+import { IsOptional, ValidateNested } from "class-validator";
+import { FloatNullableFilter } from "../../util/FloatNullableFilter";
+import { StringNullableFilter } from "../../util/StringNullableFilter";
+import { CheckWhereUniqueInput } from "../../check/base/CheckWhereUniqueInput";
 
 @InputType()
 class SimilarityReportWhereInput {
@@ -27,6 +30,51 @@ class SimilarityReportWhereInput {
     nullable: true,
   })
   id?: StringFilter;
+
+  @ApiProperty({
+    required: false,
+    type: FloatNullableFilter,
+  })
+  @Type(() => FloatNullableFilter)
+  @IsOptional()
+  @Field(() => FloatNullableFilter, {
+    nullable: true,
+  })
+  matchPercentage?: FloatNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  matchSnippet?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => CheckWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => CheckWhereUniqueInput)
+  @IsOptional()
+  @Field(() => CheckWhereUniqueInput, {
+    nullable: true,
+  })
+  check?: CheckWhereUniqueInput;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  matchedDocument?: StringNullableFilter;
 }
 
 export { SimilarityReportWhereInput as SimilarityReportWhereInput };

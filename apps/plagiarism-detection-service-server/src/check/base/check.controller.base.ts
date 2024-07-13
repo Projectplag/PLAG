@@ -22,6 +22,9 @@ import { Check } from "./Check";
 import { CheckFindManyArgs } from "./CheckFindManyArgs";
 import { CheckWhereUniqueInput } from "./CheckWhereUniqueInput";
 import { CheckUpdateInput } from "./CheckUpdateInput";
+import { SimilarityReportFindManyArgs } from "../../similarityReport/base/SimilarityReportFindManyArgs";
+import { SimilarityReport } from "../../similarityReport/base/SimilarityReport";
+import { SimilarityReportWhereUniqueInput } from "../../similarityReport/base/SimilarityReportWhereUniqueInput";
 
 export class CheckControllerBase {
   constructor(protected readonly service: CheckService) {}
@@ -29,11 +32,30 @@ export class CheckControllerBase {
   @swagger.ApiCreatedResponse({ type: Check })
   async createCheck(@common.Body() data: CheckCreateInput): Promise<Check> {
     return await this.service.createCheck({
-      data: data,
+      data: {
+        ...data,
+
+        document: data.document
+          ? {
+              connect: data.document,
+            }
+          : undefined,
+      },
       select: {
         id: true,
         createdAt: true,
         updatedAt: true,
+
+        document: {
+          select: {
+            id: true,
+          },
+        },
+
+        checkedBy: true,
+        checkDate: true,
+        similarityScore: true,
+        report: true,
       },
     });
   }
@@ -49,6 +71,17 @@ export class CheckControllerBase {
         id: true,
         createdAt: true,
         updatedAt: true,
+
+        document: {
+          select: {
+            id: true,
+          },
+        },
+
+        checkedBy: true,
+        checkDate: true,
+        similarityScore: true,
+        report: true,
       },
     });
   }
@@ -65,6 +98,17 @@ export class CheckControllerBase {
         id: true,
         createdAt: true,
         updatedAt: true,
+
+        document: {
+          select: {
+            id: true,
+          },
+        },
+
+        checkedBy: true,
+        checkDate: true,
+        similarityScore: true,
+        report: true,
       },
     });
     if (result === null) {
@@ -85,11 +129,30 @@ export class CheckControllerBase {
     try {
       return await this.service.updateCheck({
         where: params,
-        data: data,
+        data: {
+          ...data,
+
+          document: data.document
+            ? {
+                connect: data.document,
+              }
+            : undefined,
+        },
         select: {
           id: true,
           createdAt: true,
           updatedAt: true,
+
+          document: {
+            select: {
+              id: true,
+            },
+          },
+
+          checkedBy: true,
+          checkDate: true,
+          similarityScore: true,
+          report: true,
         },
       });
     } catch (error) {
@@ -115,6 +178,17 @@ export class CheckControllerBase {
           id: true,
           createdAt: true,
           updatedAt: true,
+
+          document: {
+            select: {
+              id: true,
+            },
+          },
+
+          checkedBy: true,
+          checkDate: true,
+          similarityScore: true,
+          report: true,
         },
       });
     } catch (error) {
@@ -125,5 +199,89 @@ export class CheckControllerBase {
       }
       throw error;
     }
+  }
+
+  @common.Get("/:id/similarityReports")
+  @ApiNestedQuery(SimilarityReportFindManyArgs)
+  async findSimilarityReports(
+    @common.Req() request: Request,
+    @common.Param() params: CheckWhereUniqueInput
+  ): Promise<SimilarityReport[]> {
+    const query = plainToClass(SimilarityReportFindManyArgs, request.query);
+    const results = await this.service.findSimilarityReports(params.id, {
+      ...query,
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        matchPercentage: true,
+        matchSnippet: true,
+
+        check: {
+          select: {
+            id: true,
+          },
+        },
+
+        matchedDocument: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/similarityReports")
+  async connectSimilarityReports(
+    @common.Param() params: CheckWhereUniqueInput,
+    @common.Body() body: SimilarityReportWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      similarityReports: {
+        connect: body,
+      },
+    };
+    await this.service.updateCheck({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/similarityReports")
+  async updateSimilarityReports(
+    @common.Param() params: CheckWhereUniqueInput,
+    @common.Body() body: SimilarityReportWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      similarityReports: {
+        set: body,
+      },
+    };
+    await this.service.updateCheck({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/similarityReports")
+  async disconnectSimilarityReports(
+    @common.Param() params: CheckWhereUniqueInput,
+    @common.Body() body: SimilarityReportWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      similarityReports: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateCheck({
+      where: params,
+      data,
+      select: { id: true },
+    });
   }
 }

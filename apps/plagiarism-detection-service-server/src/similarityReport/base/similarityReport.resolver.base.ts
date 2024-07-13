@@ -17,7 +17,10 @@ import { SimilarityReport } from "./SimilarityReport";
 import { SimilarityReportCountArgs } from "./SimilarityReportCountArgs";
 import { SimilarityReportFindManyArgs } from "./SimilarityReportFindManyArgs";
 import { SimilarityReportFindUniqueArgs } from "./SimilarityReportFindUniqueArgs";
+import { CreateSimilarityReportArgs } from "./CreateSimilarityReportArgs";
+import { UpdateSimilarityReportArgs } from "./UpdateSimilarityReportArgs";
 import { DeleteSimilarityReportArgs } from "./DeleteSimilarityReportArgs";
+import { Check } from "../../check/base/Check";
 import { SimilarityReportService } from "../similarityReport.service";
 @graphql.Resolver(() => SimilarityReport)
 export class SimilarityReportResolverBase {
@@ -51,6 +54,51 @@ export class SimilarityReportResolverBase {
   }
 
   @graphql.Mutation(() => SimilarityReport)
+  async createSimilarityReport(
+    @graphql.Args() args: CreateSimilarityReportArgs
+  ): Promise<SimilarityReport> {
+    return await this.service.createSimilarityReport({
+      ...args,
+      data: {
+        ...args.data,
+
+        check: args.data.check
+          ? {
+              connect: args.data.check,
+            }
+          : undefined,
+      },
+    });
+  }
+
+  @graphql.Mutation(() => SimilarityReport)
+  async updateSimilarityReport(
+    @graphql.Args() args: UpdateSimilarityReportArgs
+  ): Promise<SimilarityReport | null> {
+    try {
+      return await this.service.updateSimilarityReport({
+        ...args,
+        data: {
+          ...args.data,
+
+          check: args.data.check
+            ? {
+                connect: args.data.check,
+              }
+            : undefined,
+        },
+      });
+    } catch (error) {
+      if (isRecordNotFoundError(error)) {
+        throw new GraphQLError(
+          `No resource was found for ${JSON.stringify(args.where)}`
+        );
+      }
+      throw error;
+    }
+  }
+
+  @graphql.Mutation(() => SimilarityReport)
   async deleteSimilarityReport(
     @graphql.Args() args: DeleteSimilarityReportArgs
   ): Promise<SimilarityReport | null> {
@@ -64,5 +112,20 @@ export class SimilarityReportResolverBase {
       }
       throw error;
     }
+  }
+
+  @graphql.ResolveField(() => Check, {
+    nullable: true,
+    name: "check",
+  })
+  async getCheck(
+    @graphql.Parent() parent: SimilarityReport
+  ): Promise<Check | null> {
+    const result = await this.service.getCheck(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return result;
   }
 }
